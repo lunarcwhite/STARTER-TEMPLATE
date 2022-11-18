@@ -309,7 +309,13 @@ return [
         [
             'text' => 'blog',
             'url'  => 'admin/blog',
-            'can'  => 'manage-blog',
+            'can'  => 'isUser',
+        ],
+        [
+            'text' => 'Buku',
+            'url'  => 'admin/books',
+            'icon' => 'fas fa-fw fa-book',
+            'can' => 'isAdmin',
         ],
         [
             'text'        => 'pages',
@@ -317,25 +323,20 @@ return [
             'icon'        => 'far fa-fw fa-file',
             'label'       => 4,
             'label_color' => 'success',
+            'can'         => ['isUser', 'isAdmin'],
         ],
         ['header' => 'account_settings'],
         [
-            'text' => 'Buku',
-            'url'  => 'admin/buku',
-            'icon' => 'fas fa-fw fa-book',
-            'can' => ['superAdmin','isUser'],
-        ],
-        [
             'text' => 'profile',
-            'url'  => 'admin/settings',
+            'url'  => 'admin/profile',
             'icon' => 'fas fa-fw fa-user',
-            'can' => ['superAdmin','isUser'],
+            'can'  => 'isAdmin',
         ],
         [
             'text' => 'change_password',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
-            'can' => ['superAdmin','isUser'],
+            'url'  => 'admin.password',
+            'icon' => 'fas fa-fw fa-user',
+            'can'  => 'isAdmin',
         ],
         [
             'text'    => 'multilevel',
@@ -429,7 +430,7 @@ return [
 
     'plugins' => [
         'Datatables' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
@@ -474,7 +475,7 @@ return [
             ],
         ],
         'Sweetalert2' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
