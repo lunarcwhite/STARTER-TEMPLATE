@@ -11,6 +11,8 @@
             <button class="btn btn-primary" data-toggle="modal" data-target="#tambahBukuModal">
                 Tambah Data <i class="fa fa-plus"></i> 
             </button>
+            <a href="{{ route('admin.print.books') }}" target="_blank" class="btn btn-secondary">
+                <i class="fa fa-print"></i>Cetak PDF</a>
             <hr/>
             <table id="table-data" class="table table-bordered">
                 <thead>
@@ -26,7 +28,7 @@
                 </thead>
                 <tbody>
                     @forelse ($books as $item => $book)
-                        <tr id="table-row">
+                        <tr id="table-row{{$book->id}}">
                             <td>{{$item+1}}</td>
                             <td>{{$book->judul}}</td>
                             <td>{{$book->penulis}}</td>
@@ -207,9 +209,9 @@
                                     success: function (response) {
                                         Swal.fire('Terhapus!', response.msg, 'success');
                                         console.log(response);
-                                            $("#table-row").remove();
+                                            $("#table-row" + id).remove();
                                             //$('#table-data').load(document.URL +  ' #table-data').ajax.reload();;
-                                            // window.location.reload();
+                                            //window.location.reload();
                                     }
 
                                 });

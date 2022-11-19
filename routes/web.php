@@ -52,3 +52,7 @@ Route::delete('admin/books/delete/{id}', [AdminController::class, 'delete_book']
                                                                 ->name('admin.book.delete')
                                                                 ->middleware('is_admin');
                                                                 
+Route::get('admin/print_books', [AdminController::class, 'print_books'])
+                                                                ->name('admin.print.books')
+                                                                ->middleware('is_admin');
+                                                                
