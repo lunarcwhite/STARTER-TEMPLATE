@@ -12,9 +12,15 @@
                 Tambah Data <i class="fa fa-plus"></i> 
             </button>
             <a href="{{ route('admin.print.books') }}" target="_blank" class="btn btn-secondary">
-                <i class="fa fa-print"></i>Cetak PDF</a>
+                <i class="fa fa-print"></i> Cetak PDF</a>
+            <div class="btn-group" role="group" aria-label="Basic Example">
+                <a href="{{ route('admin.book.export') }}" class="btn btn-info" 
+                target="_blank"><i class="fa fa-file-excel"></i> Export</a>
+                <button type="button" class="btn btn-warning" data-toggle="modal" 
+                data-target="#importDataModal"><i class="fa fa-file-excel"></i> Import</button>
+            </div>
             <hr/>
-            <table id="table-data" class="table table-bordered">
+            <table id="table-data" class="table table-borderer">
                 <thead>
                     <tr class="text-center">
                         <th>NO</th>
@@ -149,6 +155,31 @@
                 </div>
         </div>
     </div>
+</div>
+<div class="modal fade" id="importDataModal" tabindex="-1" aria-labelledby="exampleModalLable" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Import Data</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <div class="modal-body">
+        <form action="{{ route('admin.book.import') }}" enctype="multipart/form-data" method="post">
+        @csrf
+        <div class="form-group">
+            <label for="cover">Upload File</label>
+            <input type="file" class="form-control" name="file"/>
+        </div>
+    </div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+    <button type="submit" class="btn btn-primary">Import Data</button>
+</form>
+</div>
+</div>
+</div>
 </div>
 @stop
 @section('js')
