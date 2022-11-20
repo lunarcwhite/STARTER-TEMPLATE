@@ -13,7 +13,8 @@ class Book extends Model
         'judul',
         'penulis',
         'tahun',
-        'penerbit'
+        'penerbit',
+        'cover'
     ];
 
     public static function getDataBooks()

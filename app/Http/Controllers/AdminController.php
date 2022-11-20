@@ -44,6 +44,7 @@ class AdminController extends Controller
             'penulis' => 'required',
             'tahun' => 'required',
             'penerbit' => 'required',
+            'cover' => 'image|file|max:2048'
         ]);
 
         $book = new Book;
