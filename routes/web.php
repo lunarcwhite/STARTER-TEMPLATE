@@ -33,34 +33,30 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('admin/home', [AdminController::class, 'index'])
-                                                                ->name('admin.home')
-                                                                ->middleware('is_admin');
+Route::controller(AdminController::class)->group(function (){
 
-Route::get('admin/books', [AdminController::class, 'books'])
-                                                                ->name('admin.books')
+    Route::get('admin/home', [AdminController::class, 'index'])->name('admin.home')
                                                                 ->middleware('is_admin');
-Route::post('admin/books', [AdminController::class, 'submit_book'])
-                                                                ->name('admin.book.submit')
-                                                                ->middleware('is_admin');
-Route::patch('admin/books/update', [AdminController::class, 'update_book'])
-                                                                ->name('admin.book.update')
-                                                                ->middleware('is_admin');
-Route::get('admin/ajaxadmin/dataBuku/{id}', [AdminController::class, 'getDataBuku']);
+    
+    Route::get('admin/books', 'books')->name('admin.books')
+                                        ->middleware('is_admin');
+    Route::post('admin/books', 'submit_book')->name('admin.book.submit')
+                                                ->middleware('is_admin');
+    Route::patch('admin/books/update', 'update_book')->name('admin.book.update')
+                                                        ->middleware('is_admin');
+    Route::get('admin/ajaxadmin/dataBuku/{id}', 'getDataBuku');
+    
+    Route::delete('admin/books/delete/{id}', 'delete_book')->name('admin.book.delete')
+                                                            ->middleware('is_admin');
+                                                                    
+    Route::get('admin/print_books', 'print_books')->name('admin.print.books')
+                                                    ->middleware('is_admin');
+    
+    Route::get('admin/books/export', 'export')->name('admin.book.export')
+                                                ->middleware('is_admin');
+    
+    Route::post('admin/books/import', 'import')->name('admin.book.import')
+                                                ->middleware('is_admin');
+});
 
-Route::delete('admin/books/delete/{id}', [AdminController::class, 'delete_book'])
-                                                                ->name('admin.book.delete')
-                                                                ->middleware('is_admin');
-                                                                
-Route::get('admin/print_books', [AdminController::class, 'print_books'])
-                                                                ->name('admin.print.books')
-                                                                ->middleware('is_admin');
-
-Route::get('admin/books/export', [AdminController::class, 'export'])
-                                                                ->name('admin.book.export')
-                                                                ->middleware('is_admin');
-
-Route::post('admin/books/import', [AdminController::class, 'import'])
-                                                                ->name('admin.book.import')
-                                                                ->middleware('is_admin');
                                                                 
