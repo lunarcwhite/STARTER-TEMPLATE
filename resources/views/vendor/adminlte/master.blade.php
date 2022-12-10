@@ -109,7 +109,7 @@
     <script>
         @if(session('status'))
             Swal.fire({
-                title: 'Congratulations!',
+                title: 'Berhasil!',
                 text: "{{ session('status') }}",
                 icon: 'Success',
                 timer: 3000
@@ -120,12 +120,12 @@
                 $message = '';
                 foreach($errors->all() as $error)
                 {
-                    $message .= "<li>{{ $error }}</li>";
+                    $message .= "<li> $error </li>";
                 }
             @endphp
             Swal.fire({
                 title: 'Error',
-                text: "{!! $message !!}",
+                html: "{!! $message !!}",
                 icon: 'error',
             })
         @endif

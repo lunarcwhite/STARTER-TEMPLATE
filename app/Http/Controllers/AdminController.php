@@ -5,14 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\ValidationException;
 use App\Models\Book;
 use PDF;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\BooksExport;
 use App\Imports\BooksImport;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AdminController extends Controller
 {
@@ -65,7 +63,7 @@ class AdminController extends Controller
                 $book->cover = $filename;
             }
         $book->save();
-        Session::flash('status', 'Update data berhasil!!!');
+        Session::flash('status', 'Data Buku Berhasil Ditambahkan!!!');
         return redirect()->back();
     }
 
@@ -108,12 +106,8 @@ class AdminController extends Controller
             }
 
                 $book->save();
-            
-                $notification = array(
-                    'message' => 'Data buku berhasil diubah',
-                    'alert-type' => 'success'
-                );
-                Session::flash('status', 'Input data berhasil!!!');
+        
+                Session::flash('status', 'Data Buku Berhasil Diupdate!!!');
         
                 return redirect()->back();
 
@@ -122,7 +116,7 @@ class AdminController extends Controller
     public function delete_book($id)
     {
         $book = Book::find($id);
-        // Storage::delete('public/cover_buku/'.$book->cover);
+        Storage::move('public/cover_buku/'.$book->cover, 'public/recycle/'.$book->cover);
         $book->delete();
 
         return response()->json($book);
@@ -143,24 +137,50 @@ class AdminController extends Controller
     public function import(Request $request)
     {
         Excel::import(new BooksImport, $request->file('file'));
-        $notification = array(
-            'message' => 'Import data berhasil dilakukan',
-            'alert-type' => 'success'
-        );
 
-        return redirect()->route('admin.books')->with($notification);
+        return redirect()->route('admin.books');
     }
 
     public function trash()
     {
         $books = Book::onlyTrashed()->get();
-        return view ('trash', compact ('books'));
+        $user = Auth::user();
+        return view ('trash', compact ('books', 'user'));
     }
     public function delete_force($id)
     {
-        $book = Book::find($id);
-        Storage::delete('public/cover_buku/'.$book->cover);
+        $book = Book::onlyTrashed()->find($id);
+        Storage::delete('public/recycle/'.$book->cover);
         $book->forceDelete();
+        Session::flash('status', 'Data Buku Berhasil Dihapus Permanen!!!');
+        return redirect()->back();
+    }
+    public function restore($id)
+    {
+        $book = Book::onlyTrashed()->find($id);
+        Storage::move('public/recycle/'.$book->cover, 'public/cover_buku/'.$book->cover);
+        $book->restore();
+        Session::flash('status', 'Data Buku Berhasil Dikembalikan!!!');
+        return redirect()->back();
+    }
+    public function restoreAll()
+    {
+        $book = Book::onlyTrashed()->get();
+        foreach($book as $item){
+            Storage::move('public/recycle/'.$item->cover, 'public/cover_buku/'.$item->cover);
+            $item->restore(); 
+        }
+        Session::flash('status', 'Semua Data Buku Berhasil Dipulihkan!!!');
+        return redirect()->back();
+    }
+    public function deleteAll()
+    {
+        $book = Book::onlyTrashed()->get();
+        foreach($book as $item){   
+            Storage::delete('public/recycle/'.$item->cover);
+            $item->forceDelete();
+        }
+        Session::flash('status', 'Semua Data Buku Berhasil Dihapus Permanen!!!');
         return redirect()->back();
     }
 }

@@ -1,0 +1,14 @@
+ii  libapache2-mod-php7.3                 7.3.33-8+0~20221028.101+debian10~1.gbpb248c7     amd64        server-side, HTML-embedded scripting language (Apache 2 module)
+ii  php-common                            2:92+0~20220117.43+debian10~1.gbpe0d14e          all          Common files for PHP packages
+ii  php-phpseclib                         2.0.14-1                                         all          implementations of an arbitrary-precision integer arithmetic library
+ii  php7.3-bz2                            7.3.33-8+0~20221028.101+debian10~1.gbpb248c7     amd64        bzip2 module for PHP
+ii  php7.3-cli                            7.3.33-8+0~20221028.101+debian10~1.gbpb248c7     amd64        command-line interpreter for the PHP scripting language
+ii  php7.3-common                         7.3.33-8+0~20221028.101+debian10~1.gbpb248c7     amd64        documentation, examples and common module for PHP
+ii  php7.3-curl                           7.3.33-8+0~20221028.101+debian10~1.gbpb248c7     amd64        CURL module for PHP
+ii  php7.3-gd                             7.3.33-8+0~20221028.101+debian10~1.gbpb248c7     amd64        GD module for PHP
+ii  php7.3-intl                           7.3.33-8+0~20221028.101+debian10~1.gbpb248c7     amd64        Internationalisation module for PHP
+ii  php7.3-json                           7.3.33-8+0~20221028.101+debian10~1.gbpb248c7     amd64        JSON module for PHP
+ii  php7.3-mysql                          7.3.33-8+0~20221028.101+debian10~1.gbpb248c7     amd64        MySQL module for PHP
+ii  php7.3-opcache                        7.3.33-8+0~20221028.101+debian10~1.gbpb248c7     amd64        Zend OpCache module for PHP
+ii  php7.3-readline                       7.3.33-8+0~20221028.101+debian10~1.gbpb248c7     amd64        readline module for PHP
+ii  php7.3-xml                            7.3.33-8+0~20221028.101+debian10~1.gbpb248c7     amd64        DOM, SimpleXML, WDDX, XML, and XSL module for PHP

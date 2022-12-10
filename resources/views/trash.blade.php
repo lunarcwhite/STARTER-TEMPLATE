@@ -8,12 +8,17 @@
     <div class="card card-default">
         <div class="card-header" id="page-buku">{{__('Pengelolaan Buku')}}</div>
         <div class="card-body">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#tambahBukuModal">
-                Tambah Data <i class="fa fa-plus"></i> 
-            </button>
-            <a href="{{ route('admin.print.books') }}" target="_blank" class="btn btn-secondary">
-                <i class="fa fa-print"></i> Cetak PDF</a>
-            <hr/>
+            <form id="form-restore-all" action="restore/all" method="post">
+            @csrf
+            </form>
+            <form id="form-delete-all" action="delete/all" method="post">
+                @csrf
+            </form>
+                <button type="button" id="btn-restore-all" class="btn btn-primary">
+                    Restore Semua Data Recycle Bin <i class="fa fa-plus"></i> 
+                </button>
+            <button id="btn-delete-all" class="btn btn-danger" type="submit">Kosongkan Recycle Bin <i class="fa fa-recycle"></i> </button>
+            <hr/> 
             <table id="table-data" class="table table-borderer">
                 <thead>
                     <tr class="text-center">
@@ -36,22 +41,24 @@
                             <td>{{$book->penerbit}}</td>
                             <td>
                                 @if ($book->cover !== null)
-                                    <img src="{{asset('storage/cover_buku/'.$book->cover)}}" width="100px"/>
+                                    <img src="{{asset('storage/recycle/'.$book->cover)}}" width="100px"/>
                                 @else
                                 [Gambar tidak tersedia]
                                 @endif    
                             </td>
                             <td>
-                                <form action="books/empty/{{$book->id}}" method="post">
-                                    @csrf
-                                    @method('delete')
                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                    <button type="button" id="btn-edit-buku" class="btn btn-success"
-                                    data-toggle="modal" data-target="#editBukuModal" data-id="{{ $book->id }}">Edit</button>
-
-                                    <button type="submit" id="btn-force-buku" class="btn btn-danger" data-id="{{$book->id}}" value="{{$book->id}}">Hapus</button>
-                                </form>   
+                                    <button type="button" id="btn-restore-buku" class="btn btn-success">Kembalikan Buku</button>
+                                    
+                                    <button type="button" id="btn-force-buku" class="btn btn-danger">Hapus Permanen</button>
                                 </div>    
+                                <form id="delete" action="books/empty/{{$book->id}}" method="post">
+                                        @csrf
+                                        @method('delete')
+                                </form>
+                                <form id="restore" action="books/restore/{{$book->id}}" method="post">
+                                    @csrf
+                                </form>    
                             </td>    
                         </tr>                        
                     @empty
@@ -64,48 +71,12 @@
 </div>
 @stop
 @section('js')
-{{-- <script>
-    $(function(){
-            $(document).on('click','#btn-edit-buku', function(){
-                let id = $(this).data('id');
-
-                $('#image-area').empty();
-
-                $.ajax({
-                    type: "get",
-                    url: "{{url('/admin/ajaxadmin/dataBuku')}}/"+id,
-                    dataType: 'json',
-                    success: function(res){
-                        $('#edit-judul').val(res.judul);
-                        $('#edit-penerbit').val(res.penerbit);
-                        $('#edit-penulis').val(res.penulis);
-                        $('#edit-tahun').val(res.tahun);
-                        $('#edit-id').val(res.id);
-                        $('#edit-old-cover').val(res.cover);
-                        
-                        if (res.cover !== null) {
-                            $('#image-area').append(
-                                "<img src='"+baseurl+"/storage/cover_buku/"+res.cover+"' width='200px'/>"
-                                );
-                            } else {
-                                $('#image-area').append('[Gambar tidak tersedia]');
-                            }
-                        },
-                    });
-                });
-        });
-    </script> --}}
-    {{-- <script>
-        $(function(){
+<script>
+$(function(){
             $(document).on('click', '#btn-force-buku', function(){
-                var id = $(this).val();
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-            }
-        });
+                event.preventDefault(); 
                     Swal.fire({
-                            title: 'Apa kamu yakin ingin menghapus permanen?',
+                            title: 'Apa kamu yakin?',
                             text: "Kamu tidak akan dapat mengembalikan ini!",
                             icon: 'warning',
                             showCancelButton: true,
@@ -115,24 +86,69 @@
                             cancelButtonText: 'Batal'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                $.ajax({
-                                    url: "books/empty/" +id,
-                                    type: "DELETE",
-                                    success: function (response) {
-                                        Swal.fire('Terhapus!', response.msg, 'success');
-                                        console.log(response);
-                                            // $("#table-row" + id).remove();
-                                            //$('#table-data').load(document.URL +  ' #table-data').ajax.reload();;
-                                            location.reload();
-                                    }
+                                document.getElementById('delete').submit();
+                            }
+                        })
 
-                                });
+              });
+              $(document).on('click', '#btn-restore-all', function(){
+                var x = $('#form-restore-all');
+                event.preventDefault(); 
+                    Swal.fire({
+                            title: 'Apa kamu yakin?',
+                            text: "Ingin Mengembalikan Semua Data Yang Ada Di Recycle Bin?",
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ya, Kembalikan!',
+                            cancelButtonText: 'Batal'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                x.submit();
+                            }
+                        })
+
+              });
+              $(document).on('click', '#btn-restore-buku', function(){
+                var x = $('#restore');
+                event.preventDefault(); 
+                    Swal.fire({
+                            title: 'Apa kamu yakin?',
+                            text: "Ingin Mengembalikan Data Buku Ini?",
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ya, Kembalikan!',
+                            cancelButtonText: 'Batal'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                x.submit();
+                            }
+                        })
+
+              });
+              $(document).on('click', '#btn-delete-all', function(){
+                event.preventDefault(); 
+                    Swal.fire({
+                            title: 'Apa kamu yakin?',
+                            html: "Ingin Mengosongkan Recycle Bin? <br> <strong>Data Tidak Dapat Dikembalikan!</strong>",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ya, Hapus!',
+                            cancelButtonText: 'Batal'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $('#form-delete-all').submit();
                             }
                         })
 
               });
             });
-    </script> --}}
+</script>
 @stop
 
 

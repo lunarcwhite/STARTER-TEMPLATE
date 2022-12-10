@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous"> --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 </head>
 <body>
     <h1 class="text-center">Data Buku</h1>
@@ -19,9 +19,12 @@
             </tr>
         </thead>
         <tbody>
-            @forelse ($books as $item => $book)
+            @php
+                $i = 0;
+            @endphp
+            @forelse ($books as $book)
                 <tr>
-                    <td>{{$item+1}}</td>
+                    <td>{{$i++}}</td>
                     <td>{{$book->judul}}</td>
                     <td>{{$book->penulis}}</td>
                     <td>{{$book->tahun}}</td>
@@ -39,8 +42,8 @@
             @endforelse
         </tbody>
     </table>
-    {{-- <script>
+    <script>
         $('#table-data').DataTable();
-    </script> --}}
+    </script>
 </body>
 </html>

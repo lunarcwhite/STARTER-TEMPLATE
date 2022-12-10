@@ -23,7 +23,6 @@ class CreateBookSeeder extends Seeder
                 'penulis' => $faker->name,
                 'tahun' => 2022,
                 'penerbit' => 'Gramedia',
-                'cover' => '[Gambar tidak tersedia]',
                 'created_at' => \Carbon\Carbon::now(),
                 'updated_at' => \Carbon\Carbon::now()
             ]);
