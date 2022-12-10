@@ -240,9 +240,9 @@
                                     success: function (response) {
                                         Swal.fire('Terhapus!', response.msg, 'success');
                                         console.log(response);
-                                            $("#table-row" + id).remove();
+                                            // $("#table-row" + id).remove();
                                             //$('#table-data').load(document.URL +  ' #table-data').ajax.reload();;
-                                            //window.location.reload();
+                                            location.reload();
                                     }
 
                                 });

@@ -34,10 +34,8 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::controller(AdminController::class)->group(function (){
-
     Route::get('admin/home', [AdminController::class, 'index'])->name('admin.home')
                                                                 ->middleware('is_admin');
-    
     Route::get('admin/books', 'books')->name('admin.books')
                                         ->middleware('is_admin');
     Route::post('admin/books', 'submit_book')->name('admin.book.submit')
@@ -45,18 +43,18 @@ Route::controller(AdminController::class)->group(function (){
     Route::patch('admin/books/update', 'update_book')->name('admin.book.update')
                                                         ->middleware('is_admin');
     Route::get('admin/ajaxadmin/dataBuku/{id}', 'getDataBuku');
-    
     Route::delete('admin/books/delete/{id}', 'delete_book')->name('admin.book.delete')
-                                                            ->middleware('is_admin');
-                                                                    
+                                                            ->middleware('is_admin');     
     Route::get('admin/print_books', 'print_books')->name('admin.print.books')
                                                     ->middleware('is_admin');
-    
     Route::get('admin/books/export', 'export')->name('admin.book.export')
                                                 ->middleware('is_admin');
-    
     Route::post('admin/books/import', 'import')->name('admin.book.import')
                                                 ->middleware('is_admin');
+    Route::get('admin/trash', 'trash')->name('trash')
+                                        ->middleware('is_admin');
+    Route::delete('admin/books/empty/{id}', 'delete_force')->name('admin.book.delete.force')
+                                        ->middleware('is_admin'); 
 });
 
                                                                 

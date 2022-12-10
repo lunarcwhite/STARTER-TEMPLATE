@@ -307,90 +307,16 @@ return [
             'text' => 'search',
         ],
         [
-            'text' => 'blog',
-            'url'  => 'admin/blog',
-            'can'  => 'isUser',
-        ],
-        [
             'text' => 'Buku',
             'url'  => 'admin/books',
             'icon' => 'fas fa-fw fa-book',
             'can' => 'isAdmin',
         ],
         [
-            'text'        => 'pages',
-            'url'         => 'admin/pages',
-            'icon'        => 'far fa-fw fa-file',
-            'label'       => 4,
-            'label_color' => 'success',
-            'can'         => ['isUser', 'isAdmin'],
-        ],
-        ['header' => 'account_settings'],
-        [
-            'text' => 'profile',
-            'url'  => 'admin/profile',
-            'icon' => 'fas fa-fw fa-user',
-            'can'  => 'isAdmin',
-        ],
-        [
-            'text' => 'change_password',
-            'url'  => 'admin.password',
-            'icon' => 'fas fa-fw fa-user',
-            'can'  => 'isAdmin',
-        ],
-        [
-            'text'    => 'multilevel',
-            'icon'    => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-                [
-                    'text'    => 'level_one',
-                    'url'     => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url'  => '#',
-                        ],
-                        [
-                            'text'    => 'level_two',
-                            'url'     => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-            ],
-        ],
-        ['header' => 'labels'],
-        [
-            'text'       => 'important',
-            'icon_color' => 'red',
-            'url'        => '#',
-        ],
-        [
-            'text'       => 'warning',
-            'icon_color' => 'yellow',
-            'url'        => '#',
-        ],
-        [
-            'text'       => 'information',
-            'icon_color' => 'cyan',
-            'url'        => '#',
+            'text' => 'Recycle Bin',
+            'url'  => 'admin/trash',
+            'icon' => 'fas fa-fw fa-recycle',
+            'can' => 'isAdmin',
         ],
     ],
 
@@ -474,16 +400,16 @@ return [
                 ],
             ],
         ],
-        'Sweetalert2' => [
-            'active' => true,
-            'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
-                ],
-            ],
-        ],
+        // 'Sweetalert2' => [
+        //     'active' => true,
+        //     'files' => [
+        //         [
+        //             'type' => 'js',
+        //             'asset' => false,
+        //             'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+        //         ],
+        //     ],
+        // ],
         'Pace' => [
             'active' => false,
             'files' => [

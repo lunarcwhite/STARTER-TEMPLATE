@@ -11,6 +11,8 @@ use PDF;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\BooksExport;
 use App\Imports\BooksImport;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AdminController extends Controller
 {
@@ -63,13 +65,8 @@ class AdminController extends Controller
                 $book->cover = $filename;
             }
         $book->save();
-
-        $notification = array(
-            'message' => 'Data buku berhasil ditambahkan',
-            'alert-type' => 'success'
-        );
-
-        return redirect()->route('admin.books')->with($notification);
+        Session::flash('status', 'Update data berhasil!!!');
+        return redirect()->back();
     }
 
     public function getDataBuku($id)
@@ -116,15 +113,16 @@ class AdminController extends Controller
                     'message' => 'Data buku berhasil diubah',
                     'alert-type' => 'success'
                 );
+                Session::flash('status', 'Input data berhasil!!!');
         
-                return redirect()->route('admin.books')->with($notification);
+                return redirect()->back();
 
     }
 
     public function delete_book($id)
     {
         $book = Book::find($id);
-        Storage::delete('public/cover_buku/'.$book->cover);
+        // Storage::delete('public/cover_buku/'.$book->cover);
         $book->delete();
 
         return response()->json($book);
@@ -151,6 +149,19 @@ class AdminController extends Controller
         );
 
         return redirect()->route('admin.books')->with($notification);
+    }
+
+    public function trash()
+    {
+        $books = Book::onlyTrashed()->get();
+        return view ('trash', compact ('books'));
+    }
+    public function delete_force($id)
+    {
+        $book = Book::find($id);
+        Storage::delete('public/cover_buku/'.$book->cover);
+        $book->forceDelete();
+        return redirect()->back();
     }
 }
 

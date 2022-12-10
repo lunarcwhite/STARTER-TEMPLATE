@@ -107,70 +107,28 @@
     @yield('adminlte_js')
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        const Toast = Swal.mixin({
-            toast: true;
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000,
-        }); 
-
-        @if(Session::has('message'))
-            var type = "{{Session::get('alert-type')}}";
-
-            switch (type) {
-                case 'info':
-                    Toast.fire({
-                    type: 'info',
-                    title: "{{Session::get('message') }}";
-                });
-                break;
-                case 'success':
-                    Toast.fire({
-                    type: 'success',
-                    title: "{{Session::get('message') }}";
-                });
-                break;
-                case 'warning':
-                    Toast.fire({
-                    type: 'warning',
-                    title: "{{Session::get('message') }}";
-                });
-                break;
-                case 'error':
-                    Toast.fire({
-                    type: 'error',
-                    title: "{{Session::get('message') }}";
-                });
-                break;
-                case 'dialog_error':
-                    Swal.fire({
-                    type: 'error',
-                    title: "Ooooops",
-                    text: "{{Session::get('message')}}",
-                    timer: 3000
-                })
-                break;
-            }
-            @endif
-
-            @if ($errors->any())
-                @foreach($errors->all() as $error)
-                    Swal.fire({
-                        type: 'error',
-                        title: "Ooooops",
-                        text: "{{ $error }}",
-                    })
-                @endforeach
-            @endif
-    </script>
-    <script>
-                @if ($errors->any())
-                    Swal.fire({
-                        icon: 'error',
-                        title: "Ooooops",
-                        text: "Terjadi suatu kesalahan",
-                    })
-            @endif
+        @if(session('status'))
+            Swal.fire({
+                title: 'Congratulations!',
+                text: "{{ session('status') }}",
+                icon: 'Success',
+                timer: 3000
+            })
+        @endif
+        @if($errors->any())
+            @php
+                $message = '';
+                foreach($errors->all() as $error)
+                {
+                    $message .= "<li>{{ $error }}</li>";
+                }
+            @endphp
+            Swal.fire({
+                title: 'Error',
+                text: "{!! $message !!}",
+                icon: 'error',
+            })
+        @endif
     </script>
     <script>
             $('#table-data').DataTable();
