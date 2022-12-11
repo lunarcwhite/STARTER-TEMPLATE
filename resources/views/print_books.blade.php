@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-</head>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+</head> 
 <body>
     <h1 class="text-center">Data Buku</h1>
     <p class="text-center">Laporan data buku tahun 2022</p>
     <br/>
-    <table id="table-data" class="table table-bordered">
+    <table id="table-data" class="table table-borderer">
         <thead>
             <tr class="text-center">
                 <th>NO</th>
@@ -19,31 +19,25 @@
             </tr>
         </thead>
         <tbody>
-            @php
-                $i = 0;
-            @endphp
-            @forelse ($books as $book)
-                <tr>
-                    <td>{{$i++}}</td>
-                    <td>{{$book->judul}}</td>
-                    <td>{{$book->penulis}}</td>
-                    <td>{{$book->tahun}}</td>
-                    <td>{{$book->penerbit}}</td>
-                    <td>
-                        @if ($book->cover !== null)
-                            <img src="{{asset('storage/cover_buku/'.$book->cover)}}" width="100px"/>
-                        @else
-                        [Gambar tidak tersedia]
-                        @endif    
-                    </td>  
-                </tr>                        
-            @empty
-                <h4>Data Kosong</h4>
-            @endforelse
+    @forelse ($books as $item => $book)
+    <tr id="table-row{{$book->id}}">
+        <td>{{$item+1}}</td>
+        <td>{{$book->judul}}</td>
+        <td>{{$book->penulis}}</td>
+        <td>{{$book->tahun}}</td>
+        <td>{{$book->penerbit}}</td>
+        <td>
+            @if ($book->cover !== null)
+                <img src="{{public_path('storage/cover_buku/'.$book->cover)}}" width="80%"/>
+            @else
+            [Gambar tidak tersedia]
+            @endif    
+        </td>>    
+    </tr>                        
+@empty
+    <h4>Data Kosong</h4>
+@endforelse
         </tbody>
     </table>
-    <script>
-        $('#table-data').DataTable();
-    </script>
 </body>
 </html>
