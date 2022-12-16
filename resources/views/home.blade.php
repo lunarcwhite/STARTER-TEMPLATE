@@ -4,7 +4,7 @@
 <h1>Dashboard</h1>
 @stop
 @section('content')
-@can('isUser')
+@can('Member')
 <div class="container-fluid" id="page">
     <div class="card card-default">
         <div class="card-header" id="page-member">{{ __('Selamat Datang') }}</div>
@@ -62,8 +62,8 @@
         </div>
     </div>
 </div>
-@endcan
 @include('member.formRegistrasi')
+@endcan
 @stop
 @section('css')
 <link rel="stylesheet" href="/css/admin_custom.css">

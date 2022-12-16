@@ -115,6 +115,14 @@
                 timer: 3000
             })
         @endif
+        @if(session('error'))
+            Swal.fire({
+                title: 'Gagal!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                timer: 3000
+            })
+        @endif
         @if($errors->any())
             @php
                 $message = '';

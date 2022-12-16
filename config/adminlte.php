@@ -310,19 +310,19 @@ return [
             'text' => 'Buku',
             'url'  => 'admin/books',
             'icon' => 'fas fa-fw fa-book',
-            'can' => 'isAdmin',
+            'can' => 'Admin',
         ],
         [
             'text' => 'Recycle Bin',
             'url'  => 'admin/trash',
             'icon' => 'fas fa-fw fa-trash',
-            'can' => 'isAdmin',
+            'can' => 'Admin',
         ],
         [
             'text' => 'Buku',
-            'url'  => 'user/books',
+            'url'  => 'member/books',
             'icon' => 'fas fa-fw fa-book',
-            'can' => 'isUser',
+            'can' => 'Member',
         ],
     ],
 

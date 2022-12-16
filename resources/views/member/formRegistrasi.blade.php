@@ -10,8 +10,7 @@
             </div>
             <div class="modal-body">
                 {{-- id form == #form --}}
-                <form id="table-form" method="post" action="{{route('member.daftar')}}"
-                    enctype="multipart/form-data">
+                <form id="table-form" method="post" action="{{route('member.create')}}" enctype="multipart/form-data">
                     @csrf
                     <div class="alert alert-primary">
                         <strong>Data Diri</strong>
@@ -20,9 +19,7 @@
                         <div class="col-sm-7">
                             <div class="form-group">
                                 <label>Nama Lengkap:</label>
-                                <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" id="user_id">
-                                <input type="text" name="nama" class="form-control"
-                                    placeholder="Masukan Nama Lengkap">
+                                <input type="text" name="nama" class="form-control" placeholder="Masukan Nama Lengkap">
                             </div>
                         </div>
                     </div>
@@ -92,8 +89,8 @@
                     </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" name="Submit" id="Submit" class="btn btn-primary">Simpan</button>
                 <button type="reset" class="btn btn-danger">Reset</button>
+                <button type="submit" name="Submit" id="Submit" class="btn btn-primary">Simpan</button>
                 </form>
             </div>
         </div>

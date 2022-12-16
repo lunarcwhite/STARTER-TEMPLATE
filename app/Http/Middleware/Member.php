@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
-class IsAdmin
+class Member
 {
     /**
      * Handle an incoming request.
@@ -17,10 +17,10 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user()->roles_id == 1){ 
+    if (auth()->user()->roles_id == 2) {
         return $next($request);
     }
-    Session::flash('error', 'Anda Tidak Memiliki Akses!!!');    
-    return redirect()->back();
-    }
+    Session::flash('error', 'Anda Tidak Memiliki Akses!!!');
+    return redirect('home');
+}
 }
