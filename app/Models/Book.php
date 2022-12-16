@@ -11,13 +11,7 @@ class Book extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = [
-        'judul',
-        'penulis',
-        'tahun',
-        'penerbit',
-        'cover'
-    ];
+    protected $guarded = [];
 
     public static function getDataBooks()
     {

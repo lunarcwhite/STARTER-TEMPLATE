@@ -34,7 +34,7 @@ class AdminController extends Controller
     {
         $user = Auth::user();
         $books = Book::all();
-        return view('book', compact('user', 'books'));
+        return view('admin.book', compact('user', 'books'));
     }
 
     public function submit_book(Request $request)
@@ -42,6 +42,7 @@ class AdminController extends Controller
         $validate = $request->validate([
             'judul' => 'required|max:255',
             'penulis' => 'required',
+            'tipe_buku' => 'required',
             'tahun' => 'required',
             'penerbit' => 'required',
             'cover' => 'image|file|max:2048'
@@ -50,6 +51,7 @@ class AdminController extends Controller
         $book = new Book;
         $book->judul = $request->get('judul');
         $book->penulis = $request->get('penulis');
+        $book->tipe_buku = $request->get('tipe_buku');
         $book->tahun = $request->get('tahun');
         $book->penerbit = $request->get('penerbit');
         
@@ -83,12 +85,13 @@ class AdminController extends Controller
             'judul' => 'required|max:255',
             'penulis' => 'required',
             'tahun' => 'required',
+            'tipe_buku' => 'required',
             'penerbit' => 'required',
-            'cover' => 'required|mimes:jpeg,png,jpg,gif,svg'
         ]);
 
         $book->judul = $request->get('judul');
         $book->penulis = $request->get('penulis');
+        $book->tipe_buku = $request->get('tipe_buku');
         $book->tahun = $request->get('tahun');
         $book->penerbit = $request->get('penerbit');
         
@@ -105,11 +108,9 @@ class AdminController extends Controller
                 $book->cover = $filename;
             }
 
-                $book->save();
-        
-                Session::flash('status', 'Data Buku Berhasil Diupdate!!!');
-        
-                return redirect()->back();
+        Session::flash('status', 'Data Buku Berhasil Diupdate!!!');
+        $book->save();
+        return redirect()->back();
 
     }
 

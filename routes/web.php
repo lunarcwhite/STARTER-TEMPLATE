@@ -22,16 +22,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Auth::routes();
-
-Route::get('/home', function() {
-    return view('home');
-})->name('home')->middleware('auth');
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('/home/submit', [App\Http\Controllers\MemberController::class, 'submit'])->middleware('is_admin')->name('member.daftar');
 
 Route::controller(AdminController::class)->group(function (){
     Route::get('admin/home', [AdminController::class, 'index'])->name('admin.home')

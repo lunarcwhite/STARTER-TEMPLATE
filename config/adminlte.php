@@ -315,8 +315,14 @@ return [
         [
             'text' => 'Recycle Bin',
             'url'  => 'admin/trash',
-            'icon' => 'fas fa-fw fa-recycle',
+            'icon' => 'fas fa-fw fa-trash',
             'can' => 'isAdmin',
+        ],
+        [
+            'text' => 'Buku',
+            'url'  => 'user/books',
+            'icon' => 'fas fa-fw fa-book',
+            'can' => 'isUser',
         ],
     ],
 

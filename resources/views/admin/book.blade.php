@@ -11,6 +11,7 @@
             <button class="btn btn-primary" data-toggle="modal" data-target="#tambahBukuModal">
                 Tambah Data <i class="fa fa-plus"></i> 
             </button>
+            <hr/>
             <a href="{{ route('admin.print.books') }}" target="_blank" class="btn btn-secondary">
                 <i class="fa fa-print"></i> Cetak PDF</a>
             <div class="btn-group" role="group" aria-label="Basic Example">
@@ -20,47 +21,51 @@
                 data-target="#importDataModal"><i class="fa fa-file-excel"></i> Import</button>
             </div>
             <hr/>
-            <table id="table-data" class="table table-borderer">
-                <thead>
-                    <tr class="text-center">
-                        <th>NO</th>
-                        <th>Judul</th>
-                        <th>Penulis</th>
-                        <th>Tahun</th>
-                        <th>Penerbit</th>
-                        <th>Cover</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($books as $item => $book)
-                        <tr id="table-row{{$book->id}}">
-                            <td>{{$item+1}}</td>
-                            <td>{{$book->judul}}</td>
-                            <td>{{$book->penulis}}</td>
-                            <td>{{$book->tahun}}</td>
-                            <td>{{$book->penerbit}}</td>
-                            <td>
-                                @if ($book->cover !== null)
-                                    <img src="{{asset('storage/cover_buku/'.$book->cover)}}" width="100px"/>
-                                @else
-                                [Gambar tidak tersedia]
-                                @endif    
-                            </td>
-                            <td>
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <button type="button" id="btn-edit-buku" class="btn btn-success"
-                                    data-toggle="modal" data-target="#editBukuModal" data-id="{{ $book->id }}">Edit</button>
-
-                                    <button type="button" id="btn-delete-buku" class="btn btn-danger" data-id="{{$book->id}}" value="{{$book->id}}">Hapus</button>   
-                                </div>    
-                            </td>    
-                        </tr>                        
-                    @empty
-                        <h4>Data Kosong</h4>
-                    @endforelse
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table id="table-data" class="table table-borderer">
+                    <thead>
+                        <tr>
+                            <th>NO</th>
+                            <th>Judul</th>
+                            <th>Penulis</th>
+                            <th>Tahun</th>
+                            <th>Penerbit</th>
+                            <th>Tipe Buku</th>
+                            <th>Cover</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($books as $item => $book)
+                            <tr id="table-row{{$book->id}}">
+                                <td>{{$item+1}}</td>
+                                <td>{{$book->judul}}</td>
+                                <td>{{$book->penulis}}</td>
+                                <td>{{$book->tahun}}</td>
+                                <td>{{$book->penerbit}}</td>
+                                <td>{{$book->tipe_buku}}</td>
+                                <td>
+                                    @if ($book->cover !== null)
+                                        <img src="{{asset('storage/cover_buku/'.$book->cover)}}" width="100px"/>
+                                    @else
+                                    [Gambar tidak tersedia]
+                                    @endif    
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <button type="button" id="btn-edit-buku" class="btn btn-success"
+                                        data-toggle="modal" data-target="#editBukuModal" data-id="{{ $book->id }}">Edit</button>
+    
+                                        <button type="button" id="btn-delete-buku" class="btn btn-danger" data-id="{{$book->id}}" value="{{$book->id}}">Hapus</button>   
+                                    </div>    
+                                </td>    
+                            </tr>                        
+                        @empty
+                            <h4>Data Kosong</h4>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -91,6 +96,20 @@
                         <div class="form-group">
                             <label for="penerbit">Penerbit</label>
                             <input type="text"  class="form-control" name="penerbit" id="penerbit" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="tipe_buku">Tipe Buku</label>
+                            <select name="tipe_buku" id="" class="form-control" required>
+                                <option value="">-- Pilih Tipe Buku --</option>
+                                <option value="Novel">Novel</option>
+                                <option value="Ensiklopedia">Ensiklopedia</option>
+                                <option value="Biografi ">Biografi </option>
+                                <option value="Pengembangan Diri">Pengembangan Diri</option>
+                                <option value="Autobiografi">Autobiografi</option>
+                                <option value="Karya Ilmiah">Karya Ilmiah</option>
+                                <option value="Komik">Komik</option>
+                                <option value="Kamus">Kamus</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="cover">Cover</label>
@@ -135,6 +154,19 @@
                         <div class="form-group">
                             <label for="edit-penerbit">Penerbit</label>
                             <input type="text"  class="form-control" name="penerbit" id="edit-penerbit" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-penerbit">Penerbit</label>
+                        <select name="tipe_buku" id="edit-tipe" class="form-control">
+                            <option value="Novel">Novel</option>
+                            <option value="Ensiklopedia">Ensiklopedia</option>
+                            <option value="Biografi ">Biografi </option>
+                            <option value="Pengembangan Diri">Pengembangan Diri</option>
+                            <option value="Autobiografi">Autobiografi</option>
+                            <option value="Karya Ilmiah">Karya Ilmiah</option>
+                            <option value="Komik">Komik</option>
+                            <option value="Kamus">Kamus</option>
+                        </select>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -200,7 +232,10 @@
                         $('#edit-penulis').val(res.penulis);
                         $('#edit-tahun').val(res.tahun);
                         $('#edit-id').val(res.id);
-                        $('#edit-old-cover').val(res.cover);
+                        $('#edit-tipe').val(res.tipe_buku).append(
+                            "<option value='"+res.tipe_buku+"'>"+res.tipe_buku+"</option>"
+                        );
+                        $('#edit-cover').val(res.cover);
                         
                         if (res.cover !== null) {
                             $('#image-area').append(
