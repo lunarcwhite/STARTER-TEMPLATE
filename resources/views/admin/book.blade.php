@@ -101,14 +101,6 @@
                             <label for="tipe_buku">Tipe Buku</label>
                             <select name="tipe_buku" id="" class="form-control" required>
                                 <option value="">-- Pilih Tipe Buku --</option>
-                                <option value="Novel">Novel</option>
-                                <option value="Ensiklopedia">Ensiklopedia</option>
-                                <option value="Biografi ">Biografi </option>
-                                <option value="Pengembangan Diri">Pengembangan Diri</option>
-                                <option value="Autobiografi">Autobiografi</option>
-                                <option value="Karya Ilmiah">Karya Ilmiah</option>
-                                <option value="Komik">Komik</option>
-                                <option value="Kamus">Kamus</option>
                             </select>
                         </div>
                         <div class="form-group">

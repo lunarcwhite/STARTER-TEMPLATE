@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddFieldTipeBukuBooks extends Migration
+class AddFieldKategoriBukuBooks extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,11 @@ class AddFieldTipeBukuBooks extends Migration
     public function up()
     {
         Schema::table('books', function (Blueprint $table) {
-            $table->char('tipe_buku', 25)->nullable();
+            $table->bigInteger('id_kategori')->unsigned();
+
+            $table->foreign('id_kategori')->references('id')->on('kategori_books')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
         });
     }
 
