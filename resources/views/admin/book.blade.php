@@ -30,8 +30,8 @@
                             <th>Penulis</th>
                             <th>Tahun</th>
                             <th>Penerbit</th>
-                            <th>Tipe Buku</th>
-                            <th>Cover</th>
+                            <th>Kategori Buku</th>
+                            <th>Gambar</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -43,10 +43,11 @@
                                 <td>{{$book->penulis}}</td>
                                 <td>{{$book->tahun}}</td>
                                 <td>{{$book->penerbit}}</td>
-                                <td>{{$book->tipe_buku}}</td>
+                                <td>{{$book->kategori->nama_kategori}}</td>
                                 <td>
                                     @if ($book->cover !== null)
-                                        <img src="{{asset('storage/cover_buku/'.$book->cover)}}" width="100px"/>
+                                        <button type="button" id="btn-gambar-buku" class="btn btn-primary"
+                                        data-toggle="modal" data-target="#gambarBuku" data-id="{{ $book->id }}">Lihat</button>
                                     @else
                                     [Gambar tidak tersedia]
                                     @endif    
@@ -55,8 +56,11 @@
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <button type="button" id="btn-edit-buku" class="btn btn-success"
                                         data-toggle="modal" data-target="#editBukuModal" data-id="{{ $book->id }}">Edit</button>
-    
-                                        <button type="button" id="btn-delete-buku" class="btn btn-danger" data-id="{{$book->id}}" value="{{$book->id}}">Hapus</button>   
+                                        <form id="delete" action="books/delete/{{$book->id}}" method="post">
+                                            @csrf
+                                            @method('delete')
+                                        </form>
+                                        <button type="button" id="btn-delete-buku" class="btn btn-danger">Hapus</button>   
                                     </div>    
                                 </td>    
                             </tr>                        
@@ -98,20 +102,51 @@
                             <input type="text"  class="form-control" name="penerbit" id="penerbit" required/>
                         </div>
                         <div class="form-group">
-                            <label for="tipe_buku">Tipe Buku</label>
-                            <select name="tipe_buku" id="" class="form-control" required>
-                                <option value="">-- Pilih Tipe Buku --</option>
+                            <label for="tipe_buku">Kategori Buku</label>
+                            <select name="kategori_buku" id="" class="form-control" required>
+                                <option value="" readonly>-- Pilih Kategori Buku --</option>
+                                @foreach ($kategori as $item)
+                                <option value="{{$item->id}}">{{$item->nama_kategori}}</option>
+                                @endforeach
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="cover">Cover</label>
-                            <input type="file" class="form-control" name="cover" id="cover"/>
+                        <div class="form-group" id="tambahGambar">
+                            <label for="cover">Gambar</label>
+                            <input type="file" class="form-control" name="cover[]" id="cover"/>
                         </div>
+                        <button type="button" onclick="tambahGambar()" class="btn btn-transparent mt-1">Klik Disini Untuk Menambah Inputan Gambar</button>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                         <button type="submit" class="btn btn-primary">Kirim</button>
                     </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="gambarBuku" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Gambar Buku</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+                <div class="modal-body">
+                    <div class="row"> 
+                        <div class="col-md-10 offset-md-1">
+                            <form id="form-hapus-gambar" action="{{route('admin.hapus.gambar')}}" method="post">
+                                @csrf
+                                @method('patch')
+                            <div class="form-group" id="image-area"></div>
+                            <input type="hidden" name="id" id="edit-id"/>
+                            </form>
+                        </div>
+                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                </div>
             </div>
         </div>
     </div>
@@ -130,7 +165,7 @@
                         @csrf
                         @method('patch')
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-8 offset-md-2">
                                 <div class="form-group">
                                     <label for="edit-judul">Judul Buku</label>
                                     <input type="text" class="form-control" name="judul" id="edit-judul" required/>
@@ -148,24 +183,12 @@
                             <input type="text"  class="form-control" name="penerbit" id="edit-penerbit" required/>
                         </div>
                         <div class="form-group">
-                            <label for="edit-penerbit">Penerbit</label>
-                        <select name="tipe_buku" id="edit-tipe" class="form-control">
-                            <option value="Novel">Novel</option>
-                            <option value="Ensiklopedia">Ensiklopedia</option>
-                            <option value="Biografi ">Biografi </option>
-                            <option value="Pengembangan Diri">Pengembangan Diri</option>
-                            <option value="Autobiografi">Autobiografi</option>
-                            <option value="Karya Ilmiah">Karya Ilmiah</option>
-                            <option value="Komik">Komik</option>
-                            <option value="Kamus">Kamus</option>
+                            <label for="edit-penerbit">Kategori</label>
+                        <select name="kategori_buku" id="edit-kategori" class="form-control">
+                            @foreach ($kategori as $item)
+                               <option value="{{$item->id}}">{{$item->nama_kategori}}</option>
+                            @endforeach 
                         </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group" id="image-area"></div>
-                        <div class="form-group">
-                            <label for="edit-cover">Cover</label>
-                            <input type="file" class="form-control" name="cover" id="edit-cover"/>
                         </div>
                     </div>
                 </div>
@@ -208,12 +231,75 @@
 @stop
 @section('js')
 <script>
+        $(function(){
+              $(document).on('click', '#btn-hapus-gambar', function(){
+                event.preventDefault(); 
+                    Swal.fire({
+                            title: 'Apa kamu yakin?',
+                            html: "Ingin Menghapus gambar ini?</strong>",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ya, Hapus!',
+                            cancelButtonText: 'Batal'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $('#form-hapus-gambar').submit();
+                            }
+                        })
+
+              });
+            });
+</script>
+<script>
+    function tambahGambar()
+    {
+        const y = document.getElementById('tambahGambar');
+        var z = document.createElement("input");
+
+        z.setAttribute('type', 'file');
+        z.setAttribute('name', 'cover[]');
+        z.setAttribute('class', 'form-control');
+        y.appendChild(z);
+        }
+</script>
+<script>
+    $(function(){
+        $(document).on('click','#btn-gambar-buku', function(){
+            $('#image-area').empty();
+            let id = $(this).data('id');
+                $.ajax({
+                    type: "get",
+                    url: "{{url('/admin/ajaxadmin/dataBuku')}}/"+id,
+                    dataType: 'json',
+                    success: function(res){
+                        let data = res.cover;
+                        $('#edit-id').val(res.id);
+                        const value = data.split(",");
+                        const removeLast = value.pop();
+                        value.forEach(x => {
+                            $('#image-area').append(
+                                `<br/>
+                                <button type="button" id="btn-hapus-gambar" class="close text-danger" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                                <img src="{{asset('storage/gambar_buku/`+x+`')}}" width="100%"/>
+                                <input type="hidden" id="hapusGambar" name="gambar" value="`+x+`">
+                                <br/>`
+                            );
+                        });
+                        },
+                    });
+                });
+        });
+    </script>
+<script>
     $(function(){
             $(document).on('click','#btn-edit-buku', function(){
                 let id = $(this).data('id');
 
                 $('#image-area').empty();
-
                 $.ajax({
                     type: "get",
                     url: "{{url('/admin/ajaxadmin/dataBuku')}}/"+id,
@@ -224,18 +310,7 @@
                         $('#edit-penulis').val(res.penulis);
                         $('#edit-tahun').val(res.tahun);
                         $('#edit-id').val(res.id);
-                        $('#edit-tipe').val(res.tipe_buku).append(
-                            "<option value='"+res.tipe_buku+"'>"+res.tipe_buku+"</option>"
-                        );
-                        $('#edit-cover').val(res.cover);
-                        
-                        if (res.cover !== null) {
-                            $('#image-area').append(
-                                "<img src='"+baseurl+"/storage/cover_buku/"+res.cover+"' width='200px'/>"
-                                );
-                            } else {
-                                $('#image-area').append('[Gambar tidak tersedia]');
-                            }
+                        $('#edit-kategori').val(res.id_kategori);
                         },
                     });
                 });
@@ -261,18 +336,9 @@
                             cancelButtonText: 'Batal'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                $.ajax({
-                                    url: "books/delete/" +id,
-                                    type: "DELETE",
-                                    success: function (response) {
-                                        Swal.fire('Terhapus!', response.msg, 'success');
-                                        console.log(response);
-                                            // $("#table-row" + id).remove();
-                                            //$('#table-data').load(document.URL +  ' #table-data').ajax.reload();;
-                                            location.reload();
-                                    }
-
-                                });
+                                if (result.isConfirmed) {
+                                $('#delete').submit();
+                            }
                             }
                         })
 

@@ -18,7 +18,7 @@
                 <th>Cover</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="text-center">
     @forelse ($books as $item => $book)
     <tr id="table-row{{$book->id}}">
         <td>{{$item+1}}</td>
@@ -28,7 +28,7 @@
         <td>{{$book->penerbit}}</td>
         <td>
             @if ($book->cover !== null)
-                <img src="{{public_path('storage/cover_buku/'.$book->cover)}}" width="80%"/>
+                <img src="{{public_path('storage/gambar_buku/'.$book->cover)}}" width="80%"/>
             @else
             [Gambar tidak tersedia]
             @endif    

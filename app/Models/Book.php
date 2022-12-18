@@ -30,4 +30,8 @@ class Book extends Model
         return $books_filter;
 
     }
+    public function kategori()
+    {
+        return $this->belongsTo(KategoriBook::class, 'id_kategori');
+    }
 }

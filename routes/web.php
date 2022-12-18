@@ -37,6 +37,7 @@ Route::middleware(['admin'])->group(function () {
     Route::controller(AdminController::class)->group(function () {
         Route::prefix('admin')->group(function () {
             Route::name('admin.')->group(function () {
+                Route::patch('/books/gambar', 'hapus_gambar')->name('hapus.gambar');
                 Route::get('/home', 'index')->name('home');
                 Route::get('/books', 'books')->name('books');
                 Route::post('/books', 'submit_book')->name('book.submit');
