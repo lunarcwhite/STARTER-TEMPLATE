@@ -13,6 +13,8 @@ use App\Imports\BooksImport;
 use Illuminate\Support\Facades\Session;
 use App\Models\KategoriBook;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use App\Models\Gambar;
 
 class AdminController extends Controller
 {
@@ -31,33 +33,14 @@ class AdminController extends Controller
         $user = Auth::user();
         return view('home', compact('user'));
     }
-    public function hapus_gambar(Request $request)
-    {
-        $id = $request->id;
-        $book = Book::find($id);
-        $value = $book['cover'];
-        $gambar = $request->gambar;
-        $data = explode("," , $value);
-        array_pop($data);
-        $z = null;
-            foreach ($data as $p) {
-                if ($p != $gambar) {
-            $z .= $p .= ',';
-                } else {
-                    Storage::delete('public/gambar_buku/'.$p);
-            }
-                }
-        Session::flash('status', 'Gambar Berhasil Dihapus!!!');
-        DB::table('books')->where('id', $id)->update(['cover' => $z]);
-        return redirect()->back();  
-    }
     
     public function books()
     {
         $user = Auth::user();
-        $books = Book::all();
+        $books = Book::orderBy('judul', 'asc')->get();
         $kategori = KategoriBook::all();
-        return view('admin.book', compact('user', 'books', 'kategori'));
+        $gambar = Gambar::all();
+        return view('admin.book', compact('user', 'books', 'kategori', 'gambar'));
     }
 
     public function submit_book(Request $request)
@@ -72,38 +55,55 @@ class AdminController extends Controller
         ]);
 
         $book = new Book;
+        $kategori = $request->get('kategori_buku');
+        $kode = 'bk-'. $kategori .'-'. Str::random(5);
         $judul = $request->get('judul');
+        $book->kode_buku = $kode;
         $book->judul = $judul;
         $book->penulis = $request->get('penulis');
-        $book->id_kategori = $request->get('kategori_buku');
+        $book->id_kategori = $kategori;
         $book->tahun = $request->get('tahun');
         $book->penerbit = $request->get('penerbit');
         $data = $request->file('cover');
-        $z = '';
-        foreach($data as $value => $cover){
+        $book->save();
+        if ($request->hasFile('cover')) {
+            foreach ($data as $value => $cover) {
                 $extension = $cover->extension();
-                $filename = 'gambar_'.$judul.time().'.'.$value.'.'.$extension;
+                $filename = 'gambar_'.$judul.'_'.time().'_'.$value.'.'.$extension;
                 $cover->storeAs(
                     'public/gambar_buku',$filename
-                    );
-                    $z .= $filename .= ',';
-                }
-                $book->cover = $z;
+                );
+                $gambar = new Gambar;
+                $gambar->kode_buku = $kode;
+                $gambar->nama_file = $filename;
+                $gambar->save();
+            }
+        }
                 Session::flash('status', 'Data Buku Berhasil Ditambahkan!!!');
-                $book->save();
         return redirect()->back();
     }
 
     public function getDataBuku($id)
     {
-        
         $buku = Book::find($id);
-        return response()->json($buku);
+        return $buku->toJson();
+        // return response()->json($buku);
     }
-
+    public function gambar()
+    {
+        $gambar = Gambar::get();
+        return response()->json($gambar);
+    }
+    public function hapus_gambar($id)
+    {
+        $gambar = Gambar::find($id);
+        $gambar->delete();
+        return response()->json($gambar);
+    }
     public function update_book(Request $request)
     {
-        $book = Book::find($request->get('id'));
+        $kode = $request->get('id');
+        $book = Book::find($kode);
 
         $validate = $request->validate([
             'judul' => 'required|max:255',
@@ -118,9 +118,24 @@ class AdminController extends Controller
         $book->id_kategori = $request->get('kategori_buku');
         $book->tahun = $request->get('tahun');
         $book->penerbit = $request->get('penerbit');
-
-        Session::flash('status', 'Data Buku Berhasil Diupdate!!!');
         $book->save();
+        $data = $request->file('gambar');
+        if ($request->hasFile('gambar')) {
+            foreach ($data as $value => $gambar) {
+                $extension = $gambar->extension();
+                $filename = 'gambar_'.$judul.'_'.time().'_'.$value.'.'.$extension;
+                $gambar->storeAs(
+                    'public/gambar_buku',$filename
+                );
+                DB::table('gambars')->insert([
+                    'kode_buku' => $kode,
+                    'nama_file' => $filename
+
+                ]);
+            }
+        }
+        $book->save();
+        Session::flash('status', 'Data Buku Berhasil Diupdate!!!');
         return redirect()->back();
 
     }
@@ -128,8 +143,13 @@ class AdminController extends Controller
     public function delete_book($id)
     {
         $book = Book::find($id);
-        if (empty($book->cover) == false) {
-        Storage::move('public/gambar_buku/'.$book->cover, 'public/recycle/'.$book->cover);
+        $gambar = Gambar::onlyTrashed()->get();
+        foreach($gambar as $value){
+            if($value['kode_buku'] == $id){
+                DB::table('gambars')->where('kode_buku', $id)->update([
+                    'deleted_at' => NULL
+                ]);
+            }
         }
         $book->delete();
         Session::flash('status', 'Data Buku Berhasil Dihapus!!!');
@@ -155,54 +175,4 @@ class AdminController extends Controller
         return redirect()->route('admin.books');
     }
 
-    public function trash()
-    {
-        $books = Book::onlyTrashed()->get();
-        $user = Auth::user();
-        return view ('admin.trash', compact ('books', 'user'));
-    }
-    public function delete_force($id)
-    {
-        $book = Book::onlyTrashed()->find($id);
-if (empty($book->cover) == false) {
-    Storage::delete('public/recycle/'.$book->cover);
-}
-        $book->forceDelete();
-        Session::flash('status', 'Data Buku Berhasil Dihapus Permanen!!!');
-        return redirect()->back();
-    }
-    public function restore($id)
-    {
-        $book = Book::onlyTrashed()->find($id);
-if (empty($book->cover) == false) {
-    Storage::move('public/recycle/'.$book->cover, 'public/gambar_buku/'.$book->cover);
-}
-        $book->restore();
-        Session::flash('status', 'Data Buku Berhasil Dipulihkan!!!');
-        return redirect()->back();
-    }
-    public function restoreAll()
-    {
-        $book = Book::onlyTrashed()->get();
-        foreach($book as $item){
-if (empty($book->cover) == false) {
-    Storage::move('public/recycle/'.$item->cover, 'public/gambar_buku/'.$item->cover);
-}
-            $item->restore(); 
-        }
-        Session::flash('status', 'Semua Data Buku Berhasil Dipulihkan!!!');
-        return redirect()->back();
-    }
-    public function deleteAll()
-    {
-        $book = Book::onlyTrashed()->get();
-        foreach($book as $item){   
-if (empty($book->cover) == false) {
-    Storage::delete('public/recycle/'.$item->cover);
-}
-            $item->forceDelete();
-        }
-        Session::flash('status', 'Semua Data Buku Berhasil Dihapus Permanen!!!');
-        return redirect()->back();
-    }
 }

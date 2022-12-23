@@ -11,6 +11,9 @@ class Book extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $primaryKey = 'kode_buku';
+    protected $keyType = 'string';
+
     protected $guarded = [];
 
     public static function getDataBooks()
@@ -33,5 +36,9 @@ class Book extends Model
     public function kategori()
     {
         return $this->belongsTo(KategoriBook::class, 'id_kategori');
+    }
+    public function gambar()
+    {
+        return $this->hasMany(Gambar::class, 'kode_buku', 'kode_buku');
     }
 }

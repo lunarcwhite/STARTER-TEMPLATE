@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\TrashController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,21 +38,30 @@ Route::middleware(['admin'])->group(function () {
     Route::controller(AdminController::class)->group(function () {
         Route::prefix('admin')->group(function () {
             Route::name('admin.')->group(function () {
-                Route::patch('/books/gambar', 'hapus_gambar')->name('hapus.gambar');
+                Route::delete('/books/gambar/delete/{id}', 'hapus_gambar')->name('hapus.gambar');
                 Route::get('/home', 'index')->name('home');
                 Route::get('/books', 'books')->name('books');
                 Route::post('/books', 'submit_book')->name('book.submit');
                 Route::patch('/books/update', 'update_book')->name('book.update');
                 Route::get('/ajaxadmin/dataBuku/{id}', 'getDataBuku');
+                Route::get('/gambar', 'gambar');
                 Route::delete('/books/delete/{id}', 'delete_book')->name('book.delete');
                 Route::get('/print_books', 'print_books')->name('print.books');
                 Route::get('/books/export', 'export')->name('book.export');
                 Route::post('/books/import', 'import')->name('book.import');
-                Route::get('/trash', 'trash')->name('trash');
-                Route::delete('/books/empty/{id}', 'delete_force')->name('book.delete.force');
-                Route::post('/books/restore/{id}', 'restore')->name('book.delete.force');
-                Route::post('/restore/all', 'restoreAll')->name('book.restore');
-                Route::post('/delete/all', 'deleteAll')->name('book.deleteAll');
+            });
+        });
+    });
+});
+Route::middleware(['admin'])->group(function () {
+    Route::controller(TrashController::class)->group(function () {
+        Route::prefix('trash')->group(function () {
+            Route::name('trash.')->group(function () {
+                Route::get('/', 'trash')->name('trash');
+                Route::delete('/delete/{id}', 'delete')->name('delete');
+                Route::post('/restore/{id}', 'restore')->name('restore');
+                Route::post('/restore/all/data', 'restore_all')->name('restore.all');
+                Route::delete('/delete/all/data', 'delete_all')->name('delete.all');
             });
         });
     });

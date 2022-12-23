@@ -314,7 +314,7 @@ return [
         ],
         [
             'text' => 'Recycle Bin',
-            'url'  => 'admin/trash',
+            'url'  => '/trash',
             'icon' => 'fas fa-fw fa-trash',
             'can' => 'Admin',
         ],
