@@ -28,6 +28,7 @@ class Book extends Model
             $books_filter[$i]['judul'] = $books[$i]->judul;
             $books_filter[$i]['penulis'] = $books[$i]->penulis;
             $books_filter[$i]['tahun'] = $books[$i]->tahun;
+            $books_filter[$i]['kategori'] = $books[$i]->kategori->nama_kategori;
             $books_filter[$i]['penerbit'] = $books[$i]->penerbit;
         }
         return $books_filter;

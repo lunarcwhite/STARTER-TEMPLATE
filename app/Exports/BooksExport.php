@@ -25,6 +25,7 @@ class BooksExport implements FromArray, WithHeadings, ShouldAutoSize
             'Judul',
             'Penulis',
             'Tahun',
+            'Kategori',
             'Penerbit'
         ];
     }

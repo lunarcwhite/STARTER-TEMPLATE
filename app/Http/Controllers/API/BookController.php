@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Book;
 use Exception;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Str;
 class BookController extends Controller
 {
     public function books()
@@ -30,23 +30,15 @@ class BookController extends Controller
 
     public function create(Request $request)
     {
+        $kode = 'bk-'. $kategori .'-'. Str::random(5);
         $validated = $request->validate([
+            'kode_buku' => $kode,
             'judul' => 'required|max:255',
             'penulis' => 'required',
             'tahun' => 'required',
             'penerbit' => 'required',
-            'cover' => 'image|file|max:4084'
+            'id_kategori' => 'required'
         ]);
-
-        if ($request->hasFile('cover'))
-        {
-            $extension = $request->file('cover')->extension();
-            $filename = 'cover_buku_'.time().'.'.$extension;
-            $request->file('cover')->storeAs(
-                'public/cover_buku', $filename
-            );
-            $validated['cover'] = $filename;
-        }
 
         Book::create($validated);
 
@@ -63,21 +55,10 @@ class BookController extends Controller
             'penulis' => 'required',
             'tahun' => 'required',
             'penerbit' => 'required',
-            'cover' => 'image|file|max:2048'
+            'id_kategori' => 'required'
         ]);
 
-        if ($request->hasFile('cover'))
-        {
-            $extension = $request->file('cover')->extension();
-            $filename = 'cover_buku_'.time().'.'.$extension;
-            $request->file('cover')->storeAs(
-                'public/cover_buku', $filename
-            );
-            $validated['cover'] = $filename;
-        }
-
         $book = Book::find($id);
-        Storage::delete('public/cover_buku/' . $book->cover);
         $book->update($validated);
 
         return response()->json([
@@ -89,8 +70,6 @@ class BookController extends Controller
     public function delete($id)
     {
         $book = Book::find($id);
-
-        Storage::delete('public/cover_buku/' . $book->cover);
 
         $book->delete();
 

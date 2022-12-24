@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\TrashController;
+use App\Http\Controllers\ManageUserController;
+use App\Http\Controllers\AktifasiController;
+use App\Http\Controllers\ManageMemberController;
+use App\Http\Controllers\PeminjamanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +34,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
             Route::name('member.')->group(function () {
                 Route::post('/create', 'create')->name('create');
                 Route::get('/books', 'book')->name('book');
+                Route::patch('/update', 'update')->name('update');
             });
         });
     });
@@ -62,6 +67,46 @@ Route::middleware(['admin'])->group(function () {
                 Route::post('/restore/{id}', 'restore')->name('restore');
                 Route::post('/restore/all/data', 'restore_all')->name('restore.all');
                 Route::delete('/delete/all/data', 'delete_all')->name('delete.all');
+            });
+        });
+    });
+});
+Route::middleware(['admin'])->group(function () {
+    Route::controller(ManageUserController::class)->group(function () {
+        Route::prefix('admin')->group(function () {
+            Route::name('admin.')->group(function () {
+                Route::get('/manage-user', 'index')->name('manage-user');
+                Route::delete('/manage-user/delete/{id}', 'delete')->name('manage-user.delete');
+            });
+        });
+    });
+});
+Route::middleware(['admin'])->group(function () {
+    Route::controller(AktifasiController::class)->group(function () {
+        Route::prefix('admin')->group(function () {
+            Route::name('admin.')->group(function () {
+                Route::get('/aktifasi', 'index')->name('aktifasi');
+                Route::patch('/aktifasi/akun', 'aktifkan')->name('aktifkan');
+            });
+        });
+    });
+});
+Route::middleware(['admin'])->group(function () {
+    Route::controller(ManageMemberController::class)->group(function () {
+        Route::prefix('admin')->group(function () {
+            Route::name('admin.')->group(function () {
+                Route::get('/member', 'index')->name('member');
+                Route::patch('/member/nonaktif', 'nonaktif')->name('nonaktif');
+            });
+        });
+    });
+});
+Route::middleware(['admin'])->group(function () {
+    Route::controller(PeminjamanController::class)->group(function () {
+        Route::prefix('admin')->group(function () {
+            Route::name('admin.')->group(function () {
+                Route::get('/peminjaman', 'index')->name('peminjaman');
+                Route::patch('/peminjaman/selesai', 'selesai')->name('selesai');
             });
         });
     });

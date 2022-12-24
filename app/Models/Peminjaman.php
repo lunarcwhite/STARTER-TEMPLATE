@@ -5,15 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Member extends Model
+class Peminjaman extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'no_reg';
-
     protected $guarded = [];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id', 'id');
-    }
 }

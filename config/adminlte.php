@@ -313,6 +313,30 @@ return [
             'can' => 'Admin',
         ],
         [
+            'text' => 'Peminjaman Buku',
+            'url'  => 'admin/peminjaman',
+            'icon' => 'fas fa-fw fa-warehouse',
+            'can' => 'Admin',
+        ],
+        [
+            'text' => 'Permintaan Aktifasi',
+            'url'  => 'admin/aktifasi',
+            'icon' => 'fas fa-fw fa-user-plus',
+            'can' => 'Admin',
+        ],
+        [
+            'text' => 'Manage Member',
+            'url'  => 'admin/member',
+            'icon' => 'fas fa-fw fa-user',
+            'can' => 'Admin',
+        ],
+        [
+            'text' => 'Manage User',
+            'url'  => 'admin/manage-user',
+            'icon' => 'fas fa-fw fa-users',
+            'can' => 'Admin',
+        ],
+        [
             'text' => 'Recycle Bin',
             'url'  => '/trash',
             'icon' => 'fas fa-fw fa-trash',

@@ -39,19 +39,11 @@
                         <tr>
                             <td>{{ $member->no_reg }}</td>
                             <td>{{ $member->nama }}</td>
-                            @if($member->can_update == true)
-                                        <td>
-                                            <button type="button" id="btn-edit-registrasi" class="btn btn-warning sm"
-                                                data-toggle="modal" data-target="#formEditRegistrasiModal"
-                                                onclick="enable()" data-id="{{ $member->no_reg }}">Edit</button>
-                            </td>
-                            @else
                             <td>
                                 <button type="button" id="btn-read-registrasi" class="btn btn-info success"
-                                    data-toggle="modal" data-target="#formReadRegistrasiModal"
+                                    data-toggle="modal" data-target="#formEditRegistrasiModal"
                                     data-id="{{ $member->no_reg }}">Lihat</button>
                             </td>
-                            @endif
                         </tr>
                     </tbody>
                 </table>
@@ -63,6 +55,9 @@
     </div>
 </div>
 @include('member.formRegistrasi')
+@if($member == true && $member->status == true)
+@include('member.formEditRegistrasi')
+@endif
 @endcan
 @stop
 @section('css')
